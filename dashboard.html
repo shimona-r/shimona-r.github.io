@@ -1,0 +1,406 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Supply Chain Portfolio</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap" rel="stylesheet">
+<style>
+/* Layout: filter toolbar, three KPI tiles, two bar-chart cards side by side, then a full-width ranked risk table.
+   Dusty rose and lavender on a blush ground. Each chart uses one hue; risk pills are the only off-palette color. */
+:root {
+  --bg: #F7EFF4;
+  --glow-1: rgba(214, 140, 172, 0.26);
+  --glow-2: rgba(150, 128, 198, 0.24);
+  --surface: #FFFFFF;
+  --surface-2: #FBF5F9;
+  --line: #EBDCE6;
+  --track: #F1E4EC;
+  --ink: #3A2846;
+  --ink-2: #64506F;
+  --muted: #76637F;
+  --rose: #C9769B;
+  --rose-deep: #A8527B;
+  --rose-soft: #F7DFEA;
+  --plum: #8E78BF;
+  --plum-deep: #6B54A3;
+  --plum-soft: #E8E0F4;
+  --mauve-soft: #F2E2F0;
+  --good-bg: #DCEBE0;
+  --good-fg: #2E5A3D;
+  --warn-bg: #F6E7C9;
+  --warn-fg: #6A4812;
+  --bad-bg: #F6D6DF;
+  --bad-fg: #7C2B4B;
+  --shadow: 0 1px 2px rgba(80, 50, 90, 0.06), 0 10px 28px rgba(120, 80, 140, 0.09);
+  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-body: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color-scheme: light;
+}
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(900px 520px at 6% -8%, var(--glow-1), transparent 62%),
+    radial-gradient(820px 520px at 100% 0%, var(--glow-2), transparent 60%);
+  background-repeat: no-repeat;
+  color: var(--ink);
+  font: 15px/1.5 var(--font-body);
+  font-variant-numeric: tabular-nums;
+}
+.wrap {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding-block: 32px 44px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid;
+  gap: 20px;
+}
+button, select { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--plum-deep); outline-offset: 2px; }
+
+/* Header */
+.eyebrow { margin: 0 0 6px; font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--rose-deep); }
+h1 { margin: 0; font-family: var(--font-display); font-weight: 600; font-size: 36px; line-height: 1.1; letter-spacing: -0.01em; text-wrap: balance; }
+.sub { margin: 8px 0 0; color: var(--ink-2); }
+
+/* Toolbar */
+.toolbar {
+  display: flex; flex-wrap: wrap; align-items: flex-end; gap: 14px 16px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 18px;
+  padding: 14px 16px; box-shadow: var(--shadow);
+}
+.field { display: grid; gap: 4px; min-width: 0; flex: 1 1 200px; max-width: 280px; }
+.field label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+select {
+  appearance: none; -webkit-appearance: none; width: 100%;
+  background-color: var(--surface-2);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%236B54A3' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 14px center;
+  border: 1px solid var(--line); border-radius: 12px; padding: 10px 38px 10px 14px; cursor: pointer;
+  color: var(--ink);
+}
+select:hover { border-color: var(--rose); }
+.btn {
+  background: var(--plum-soft); color: var(--plum-deep); border: 0; border-radius: 12px;
+  padding: 10px 16px; font-weight: 600; cursor: pointer;
+}
+.btn:hover { background: #DDD1EF; }
+.count { margin: 0 0 0 auto; align-self: center; color: var(--muted); font-size: 13px; }
+
+/* KPI tiles */
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.kpi { border-radius: 20px; padding: 20px 22px; border: 1px solid rgba(255, 255, 255, 0.7); box-shadow: var(--shadow); min-width: 0; }
+.kpi.k1 { background: var(--rose-soft); }
+.kpi.k2 { background: var(--plum-soft); }
+.kpi.k3 { background: var(--mauve-soft); }
+.kpi h2 { margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-2); }
+.kpi .big { margin: 8px 0 2px; font-family: var(--font-display); font-weight: 600; font-size: 42px; line-height: 1.1; letter-spacing: -0.015em; }
+.kpi .big small { font-family: var(--font-body); font-size: 16px; font-weight: 500; color: var(--ink-2); letter-spacing: 0; margin-left: 4px; }
+.kpi .note { margin: 0; color: var(--ink-2); font-size: 13px; }
+.meter { margin-top: 12px; height: 8px; border-radius: 4px; background: rgba(255, 255, 255, 0.75); overflow: hidden; }
+.meter span { display: block; height: 100%; background: var(--plum-deep); border-radius: 4px; }
+
+/* Cards */
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 20px 22px; box-shadow: var(--shadow); min-width: 0; }
+.card h2 { margin: 0; font-family: var(--font-display); font-weight: 600; font-size: 21px; letter-spacing: -0.005em; }
+.card .cap { margin: 4px 0 14px; color: var(--muted); font-size: 13px; }
+.charts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 860px) { .charts { grid-template-columns: minmax(0, 1fr); } }
+
+/* Bars */
+.bars { display: grid; gap: 4px; }
+.bar { all: unset; box-sizing: border-box; display: grid; gap: 5px; padding: 7px 8px; margin: 0 -8px; border-radius: 10px; cursor: pointer; }
+.bar:hover { background: var(--surface-2); }
+.bar:focus-visible { outline: 2px solid var(--plum-deep); outline-offset: 0; }
+.bar-top { display: flex; justify-content: space-between; gap: 12px; font-size: 13.5px; }
+.bar-name { min-width: 0; overflow-wrap: anywhere; color: var(--ink); }
+.bar-val { font-weight: 600; color: var(--ink); white-space: nowrap; }
+.bar-track { display: block; height: 10px; border-radius: 5px; background: var(--track); overflow: hidden; }
+.bar-fill { display: block; height: 100%; border-radius: 4px; min-width: 3px; }
+.bars.sup .bar-fill { background: var(--rose); }
+.bars.cat .bar-fill { background: var(--plum); }
+.bars.sup .bar:hover .bar-fill, .bars.sup .bar.sel .bar-fill { background: var(--rose-deep); }
+.bars.cat .bar:hover .bar-fill, .bars.cat .bar.sel .bar-fill { background: var(--plum-deep); }
+.bars.has-sel .bar:not(.sel) { opacity: 0.5; }
+.bars.has-sel .bar:not(.sel):hover { opacity: 1; }
+.bar.sel .bar-name { font-weight: 600; }
+
+/* Table */
+.table-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 10px 16px; margin-bottom: 14px; }
+.table-head .cap { margin: 4px 0 0; }
+.seg { display: inline-flex; background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; padding: 3px; gap: 2px; flex-wrap: wrap; }
+.seg button { border: 0; background: transparent; padding: 7px 13px; border-radius: 9px; font-size: 13px; font-weight: 600; color: var(--ink-2); cursor: pointer; }
+.seg button:hover { color: var(--ink); }
+.seg button[aria-pressed="true"] { background: var(--plum-deep); color: #FFFFFF; }
+.scroll { overflow-x: auto; margin: 0 -6px; padding: 0 6px; }
+table { width: 100%; border-collapse: collapse; min-width: 780px; }
+th { text-align: left; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); padding: 8px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+td { padding: 11px 10px; border-bottom: 1px solid var(--track); vertical-align: middle; }
+th.num, td.num { text-align: right; }
+tbody tr:last-child td { border-bottom: 0; }
+tbody tr:hover { background: var(--surface-2); }
+tbody tr.sel { background: var(--rose-soft); }
+.rank { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--plum-soft); color: var(--plum-deep); font-size: 12px; font-weight: 700; }
+tr.top .rank { background: var(--rose); color: #fff; }
+.link { all: unset; box-sizing: border-box; cursor: pointer; font-weight: 600; color: var(--ink); }
+.link:hover { color: var(--rose-deep); text-decoration: underline; }
+.link:focus-visible { outline: 2px solid var(--plum-deep); outline-offset: 2px; border-radius: 4px; }
+.tcat { display: block; font-size: 12px; color: var(--muted); }
+.spend { display: grid; gap: 4px; justify-items: end; }
+.mini { display: flex; align-items: center; gap: 8px; justify-content: flex-end; width: 100%; }
+.mini i { display: block; height: 6px; border-radius: 3px; background: var(--rose); }
+.mini b { font-weight: 500; font-size: 12px; color: var(--muted); min-width: 40px; text-align: right; }
+.rate small { display: block; font-size: 12px; color: var(--muted); }
+.pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 11px; border-radius: 999px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+.pill.high { background: var(--bad-bg); color: var(--bad-fg); }
+.pill.watch { background: var(--warn-bg); color: var(--warn-fg); }
+.pill.low { background: var(--good-bg); color: var(--good-fg); }
+.foot { margin: 14px 0 0; color: var(--muted); font-size: 12.5px; }
+.src { margin: 0; color: var(--muted); font-size: 12.5px; }
+
+#tip {
+  position: fixed; z-index: 50; pointer-events: none; max-width: 260px;
+  background: var(--ink); color: #FFFFFF; padding: 9px 12px; border-radius: 10px;
+  font-size: 12.5px; line-height: 1.45; white-space: pre-line; box-shadow: 0 8px 24px rgba(58, 40, 70, 0.25);
+}
+@media (max-width: 560px) {
+  h1 { font-size: 29px; }
+  .kpi .big { font-size: 36px; }
+  .count { margin-left: 0; width: 100%; }
+  .field { max-width: none; }
+}
+</style>
+
+<div class="wrap">
+  <header>
+    <p class="eyebrow" id="range"></p>
+    <h1>Supply Chain Portfolio</h1>
+    <p class="sub" id="scope"></p>
+  </header>
+
+  <section class="toolbar" aria-label="Filters">
+    <div class="field"><label for="f-cat">Category</label><select id="f-cat"></select></div>
+    <div class="field"><label for="f-sup">Supplier</label><select id="f-sup"></select></div>
+    <button class="btn" id="reset" type="button">Reset filters</button>
+    <p class="count" id="count" aria-live="polite"></p>
+  </section>
+
+  <section class="kpis" aria-label="Key figures">
+    <article class="kpi k1">
+      <h2>Total spend</h2>
+      <p class="big" id="k-spend"></p>
+      <p class="note" id="k-spend-note"></p>
+    </article>
+    <article class="kpi k2">
+      <h2>Average lead time</h2>
+      <p class="big" id="k-lead"></p>
+      <p class="note" id="k-lead-note"></p>
+    </article>
+    <article class="kpi k3">
+      <h2>On-time delivery</h2>
+      <p class="big" id="k-otd"></p>
+      <p class="note" id="k-otd-note"></p>
+      <div class="meter" aria-hidden="true"><span id="k-otd-bar"></span></div>
+    </article>
+  </section>
+
+  <section class="charts">
+    <div class="card">
+      <h2>Spend by supplier</h2>
+      <p class="cap" id="cap-sup"></p>
+      <div class="bars sup" id="sup-bars"></div>
+    </div>
+    <div class="card">
+      <h2>Spend by category</h2>
+      <p class="cap" id="cap-cat"></p>
+      <div class="bars cat" id="cat-bars"></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="table-head">
+      <div>
+        <h2>Supplier risk table</h2>
+        <p class="cap" id="cap-tbl"></p>
+      </div>
+      <div class="seg" role="group" aria-label="Rank suppliers by">
+        <button type="button" data-sort="spend" data-fid="sort-spend">Spend</button>
+        <button type="button" data-sort="rate" data-fid="sort-rate">Late rate</button>
+        <button type="button" data-sort="lateSpend" data-fid="sort-lateSpend">Late spend</button>
+      </div>
+    </div>
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Rank</th><th>Supplier</th><th class="num">Spend</th><th class="num">Orders</th>
+            <th class="num">Late rate</th><th class="num">Late spend</th><th class="num">Avg lead time</th><th>Risk</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+    <p class="foot">Risk tier by late-delivery rate: High at 15% or more, Watch at 10% to 15%, Low below 10%. Late spend is the value of orders delivered late. Each supplier has 14 to 17 orders, so one late order moves its rate by 6 to 7 points.</p>
+  </section>
+
+  <p class="src">Source: procurement_orders.csv, 150 purchase orders. PO IDs 100023, 100057, 100088 and 100121 each appear twice in the file; every row is counted, so spend includes both entries. Average lead time is the simple mean across orders.</p>
+</div>
+<div id="tip" hidden></div>
+
+<script>
+// [po, supplier, category, order date, lead time days, on time (1/0), spend]
+const RAW = [["100001","Greenfield Packaging Co.","Packaging","2026-01-05",14,1,2160.0],["100002","Apex Plastics Ltd","Packaging","2026-01-06",21,1,3680.0],["100003","Northstar Ingredients Inc","Ingredients","2026-01-07",18,1,16500.0],["100004","Meridian Labels & Print","Labels","2026-01-09",10,1,1550.0],["100005","BlueRiver Chemicals","Chemicals","2026-01-12",25,0,8640.0],["100006","Ironwood Corrugated","Cartons","2026-01-13",12,1,5640.0],["100007","Pacific Aroma Labs","Fragrance","2026-01-14",30,1,5805.0],["100008","Sunrise Paper Products","Packaging","2026-01-15",9,1,300.0],["100009","Crestline Glass Works","Packaging","2026-01-19",28,1,7100.0],["100010","Harbor Logistics Supply","Supplies","2026-01-20",7,1,4260.0],["100011","Greenfield Packaging Co.","Packaging","2026-01-22",14,1,2800.0],["100012","Apex Plastics Ltd","Packaging","2026-01-23",21,1,3150.0],["100013","Northstar Ingredients Inc","Ingredients","2026-01-26",20,1,2725.0],["100014","Meridian Labels & Print","Labels","2026-01-27",8,1,720.0],["100015","BlueRiver Chemicals","Chemicals","2026-01-29",22,1,5880.0],["100016","Ironwood Corrugated","Cartons","2026-02-02",12,1,5220.0],["100017","Pacific Aroma Labs","Fragrance","2026-02-03",30,0,4608.0],["100018","Sunrise Paper Products","Packaging","2026-02-05",10,1,4650.0],["100019","Crestline Glass Works","Packaging","2026-02-06",26,1,9900.0],["100020","Harbor Logistics Supply","Supplies","2026-02-09",6,1,5750.0],["100021","Greenfield Packaging Co.","Packaging","2026-02-10",14,1,2700.0],["100022","Apex Plastics Ltd","Packaging","2026-02-12",18,1,1560.0],["100023","Northstar Ingredients Inc","Ingredients","2026-02-13",21,1,5440.0],["100023","Northstar Ingredients Inc","Ingredients","2026-02-13",21,1,5440.0],["100025","Meridian Labels & Print","Labels","2026-02-16",10,1,1860.0],["100026","BlueRiver Chemicals","Chemicals","2026-02-18",15,1,7640.0],["100027","Ironwood Corrugated","Cartons","2026-02-19",12,1,7050.0],["100028","Pacific Aroma Labs","Fragrance","2026-02-23",28,1,4705.0],["100029","Sunrise Paper Products","Packaging","2026-02-24",9,0,360.0],["100030","Crestline Glass Works","Packaging","2026-02-26",28,1,5760.0],["100031","Harbor Logistics Supply","Supplies","2026-03-02",7,1,6300.0],["100032","Greenfield Packaging Co.","Packaging","2026-03-03",16,1,1800.0],["100033","Apex Plastics Ltd","Packaging","2026-03-05",21,1,4600.0],["100034","Northstar Ingredients Inc","Ingredients","2026-03-06",14,1,22200.0],["100035","Meridian Labels & Print","Labels","2026-03-09",10,1,1485.0],["100036","BlueRiver Chemicals","Chemicals","2026-03-11",12,1,4470.0],["100037","Ironwood Corrugated","Cartons","2026-03-12",15,1,5400.0],["100038","Pacific Aroma Labs","Fragrance","2026-03-16",30,1,3992.0],["100039","Sunrise Paper Products","Packaging","2026-03-17",10,1,3875.0],["100040","Crestline Glass Works","Packaging","2026-03-19",26,1,8250.0],["100041","Harbor Logistics Supply","Supplies","2026-03-23",7,0,5680.0],["100042","Greenfield Packaging Co.","Packaging","2026-03-24",14,1,3500.0],["100043","Apex Plastics Ltd","Packaging","2026-03-26",18,1,1900.0],["100044","Northstar Ingredients Inc","Ingredients","2026-03-30",18,1,20750.0],["100045","Meridian Labels & Print","Labels","2026-03-31",10,1,1530.0],["100046","BlueRiver Chemicals","Chemicals","2026-04-02",25,1,10476.0],["100047","Ironwood Corrugated","Cartons","2026-04-06",12,1,6960.0],["100048","Pacific Aroma Labs","Fragrance","2026-04-07",30,1,5346.0],["100049","Sunrise Paper Products","Packaging","2026-04-09",12,1,1530.0],["100050","Crestline Glass Works","Packaging","2026-04-13",28,1,9940.0],["100051","Harbor Logistics Supply","Supplies","2026-04-14",6,1,6900.0],["100052","Greenfield Packaging Co.","Packaging","2026-04-16",14,0,3330.0],["100053","Apex Plastics Ltd","Packaging","2026-04-20",21,1,5520.0],["100054","Northstar Ingredients Inc","Ingredients","2026-04-21",20,1,3270.0],["100055","Meridian Labels & Print","Labels","2026-04-23",8,1,630.0],["100056","BlueRiver Chemicals","Chemicals","2026-04-27",22,1,4950.0],["100057","Ironwood Corrugated","Cartons","2026-04-28",12,1,7600.0],["100057","Ironwood Corrugated","Cartons","2026-04-28",12,1,7600.0],["100059","Pacific Aroma Labs","Fragrance","2026-04-30",30,1,4915.2],["100060","Sunrise Paper Products","Packaging","2026-05-04",9,0,336.0],["100061","Crestline Glass Works","Packaging","2026-05-05",26,1,8800.0],["100062","Harbor Logistics Supply","Supplies","2026-05-07",8,1,1340.0],["100063","Greenfield Packaging Co.","Packaging","2026-05-11",16,1,1170.0],["100064","Apex Plastics Ltd","Packaging","2026-05-12",18,1,2080.0],["100065","Northstar Ingredients Inc","Ingredients","2026-05-14",21,1,6950.0],["100066","Meridian Labels & Print","Labels","2026-05-18",10,0,1320.0],["100067","BlueRiver Chemicals","Chemicals","2026-05-19",15,1,6948.0],["100068","Ironwood Corrugated","Cartons","2026-05-21",15,1,4830.0],["100069","Pacific Aroma Labs","Fragrance","2026-05-26",28,1,4893.2],["100070","Sunrise Paper Products","Packaging","2026-05-27",10,1,5474.0],["100071","Crestline Glass Works","Packaging","2026-05-29",28,1,7200.0],["100072","Harbor Logistics Supply","Supplies","2026-06-01",7,1,5022.5],["100073","Greenfield Packaging Co.","Packaging","2026-06-03",14,1,3600.0],["100074","Apex Plastics Ltd","Packaging","2026-06-04",21,1,4230.0],["100075","Northstar Ingredients Inc","Ingredients","2026-06-08",18,1,18810.0],["100076","Meridian Labels & Print","Labels","2026-06-09",10,1,1350.0],["100077","BlueRiver Chemicals","Chemicals","2026-06-11",25,1,9392.0],["100078","Ironwood Corrugated","Cartons","2026-06-15",12,0,6110.0],["100079","Pacific Aroma Labs","Fragrance","2026-06-16",30,1,3792.4],["100080","Sunrise Paper Products","Packaging","2026-06-18",12,1,1700.0],["100081","Crestline Glass Works","Packaging","2026-06-22",28,1,7920.0],["100082","Harbor Logistics Supply","Supplies","2026-06-23",6,1,5287.5],["100083","Greenfield Packaging Co.","Packaging","2026-06-25",14,1,3080.0],["100084","Apex Plastics Ltd","Packaging","2026-06-29",21,1,2940.0],["100085","Northstar Ingredients Inc","Ingredients","2026-06-30",20,1,3094.0],["100086","Meridian Labels & Print","Labels","2026-07-02",8,1,540.0],["100087","BlueRiver Chemicals","Chemicals","2026-07-06",22,1,5445.0],["100088","Ironwood Corrugated","Cartons","2026-07-07",12,1,5800.0],["100088","Ironwood Corrugated","Cartons","2026-07-08",12,1,5900.0],["100090","Pacific Aroma Labs","Fragrance","2026-07-09",30,1,5832.0],["100091","Sunrise Paper Products","Packaging","2026-07-13",9,0,338.0],["100092","Crestline Glass Works","Packaging","2026-07-14",26,1,9520.0],["100093","Harbor Logistics Supply","Supplies","2026-07-16",7,1,6720.0],["100094","Greenfield Packaging Co.","Packaging","2026-07-20",16,1,2025.0],["100095","Apex Plastics Ltd","Packaging","2026-07-21",18,1,1855.0],["100096","Northstar Ingredients Inc","Ingredients","2026-07-23",21,1,6255.0],["100097","Meridian Labels & Print","Labels","2026-07-27",10,1,1428.0],["100098","BlueRiver Chemicals","Chemicals","2026-07-28",12,1,3775.0],["100099","Ironwood Corrugated","Cartons","2026-07-30",15,1,4140.0],["100100","Pacific Aroma Labs","Fragrance","2026-08-03",30,1,5150.0],["100101","Sunrise Paper Products","Packaging","2026-08-04",10,1,4301.0],["100102","Crestline Glass Works","Packaging","2026-08-06",28,1,6370.0],["100103","Harbor Logistics Supply","Supplies","2026-08-10",7,0,5453.0],["100104","Greenfield Packaging Co.","Packaging","2026-08-11",14,1,2880.0],["100105","Apex Plastics Ltd","Packaging","2026-08-13",21,1,5170.0],["100106","Northstar Ingredients Inc","Ingredients","2026-08-17",14,1,18750.0],["100107","Meridian Labels & Print","Labels","2026-08-18",10,1,1296.0],["100108","BlueRiver Chemicals","Chemicals","2026-08-20",15,1,6176.0],["100109","Ironwood Corrugated","Cartons","2026-08-24",12,1,6650.0],["100110","Pacific Aroma Labs","Fragrance","2026-08-25",30,1,4208.4],["100111","Sunrise Paper Products","Packaging","2026-08-27",12,1,1892.0],["100112","Crestline Glass Works","Packaging","2026-08-31",28,1,8640.0],["100113","Harbor Logistics Supply","Supplies","2026-09-01",6,1,5875.0],["100114","Greenfield Packaging Co.","Packaging","2026-09-03",14,1,3480.0],["100115","Apex Plastics Ltd","Packaging","2026-09-08",18,0,2280.0],["100116","Northstar Ingredients Inc","Ingredients","2026-09-09",18,1,16800.0],["100117","Meridian Labels & Print","Labels","2026-09-11",10,1,1705.0],["100118","BlueRiver Chemicals","Chemicals","2026-09-14",25,1,10030.0],["100119","Ironwood Corrugated","Cartons","2026-09-15",12,1,6490.0],["100120","Pacific Aroma Labs","Fragrance","2026-09-17",28,1,4560.0],["100121","Sunrise Paper Products","Packaging","2026-09-21",9,1,351.0],["100121","Sunrise Paper Products","Packaging","2026-09-21",9,1,351.0],["100123","Crestline Glass Works","Packaging","2026-09-23",26,1,8960.0],["100124","Harbor Logistics Supply","Supplies","2026-09-28",8,1,1700.0],["100125","Greenfield Packaging Co.","Packaging","2026-09-29",16,1,1280.0],["100126","Apex Plastics Ltd","Packaging","2026-10-01",18,1,2014.0],["100127","Northstar Ingredients Inc","Ingredients","2026-10-02",21,0,5992.5],["100128","Meridian Labels & Print","Labels","2026-10-05",8,1,722.0],["100129","BlueRiver Chemicals","Chemicals","2026-10-06",22,1,4980.0],["100130","Ironwood Corrugated","Cartons","2026-10-07",15,1,4480.0],["100131","Pacific Aroma Labs","Fragrance","2026-10-08",28,1,5684.0],["100132","Sunrise Paper Products","Packaging","2026-10-09",10,1,5135.0],["100133","Crestline Glass Works","Packaging","2026-10-12",28,1,6860.0],["100134","Harbor Logistics Supply","Supplies","2026-10-13",7,1,4608.0],["100135","Greenfield Packaging Co.","Packaging","2026-10-14",14,1,3515.0],["100136","Apex Plastics Ltd","Packaging","2026-10-15",21,1,4700.0],["100137","Northstar Ingredients Inc","Ingredients","2026-10-16",20,1,2886.0],["100138","Meridian Labels & Print","Labels","2026-10-19",10,0,1260.0],["100139","BlueRiver Chemicals","Chemicals","2026-10-20",12,1,4228.0],["100140","Ironwood Corrugated","Cartons","2026-10-21",12,1,6840.0],["100141","Pacific Aroma Labs","Fragrance","2026-10-22",30,1,4532.0],["100142","Sunrise Paper Products","Packaging","2026-10-23",9,1,377.0],["100143","Crestline Glass Works","Packaging","2026-10-26",21,1,8400.0],["100144","Harbor Logistics Supply","Supplies","2026-10-27",6,1,6462.5],["100145","Greenfield Packaging Co.","Packaging","2026-10-27",14,1,3045.0],["100146","Apex Plastics Ltd","Packaging","2026-10-28",16,0,2730.0],["100147","Northstar Ingredients Inc","Ingredients","2026-10-29",18,1,15156.0],["100148","Meridian Labels & Print","Labels","2026-10-29",10,1,1456.0],["100149","Ironwood Corrugated","Cartons","2026-10-30",12,1,5605.0],["100150","Sunrise Paper Products","Packaging","2026-10-30",12,1,1634.0]];
+const rows = RAW.map(r => ({ po: r[0], sup: r[1], cat: r[2], date: r[3], lead: r[4], ok: r[5] === 1, spend: r[6] }));
+const S = { cat: '', sup: '', sort: 'spend' };
+
+const $ = id => document.getElementById(id);
+const usd = n => '$' + Math.round(n).toLocaleString('en-US');
+const usdK = n => n >= 1000 ? '$' + (n / 1000).toFixed(1) + 'K' : '$' + Math.round(n);
+const pct = n => n.toFixed(1) + '%';
+const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+function group(list, key) {
+  const m = new Map();
+  for (const r of list) {
+    let g = m.get(r[key]);
+    if (!g) { g = { name: r[key], spend: 0, orders: 0, late: 0, lateSpend: 0, lead: 0, cats: new Set() }; m.set(r[key], g); }
+    g.spend += r.spend; g.orders++; g.lead += r.lead; g.cats.add(r.cat);
+    if (!r.ok) { g.late++; g.lateSpend += r.spend; }
+  }
+  return [...m.values()];
+}
+const tier = rate => rate >= 15 ? 'high' : rate >= 10 ? 'watch' : 'low';
+const tierLabel = { high: '▲ High', watch: '◆ Watch', low: '● Low' };
+
+function fmtDate(iso) {
+  const d = new Date(iso + 'T00:00:00Z');
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
+}
+
+function renderSelects(catOnly, supOnly) {
+  const cats = [...new Set(supOnly.map(r => r.cat))].sort();
+  const sups = [...new Set(catOnly.map(r => r.sup))].sort();
+  $('f-cat').innerHTML = '<option value="">All categories</option>' + cats.map(c => `<option value="${esc(c)}"${c === S.cat ? ' selected' : ''}>${esc(c)}</option>`).join('');
+  $('f-sup').innerHTML = '<option value="">All suppliers</option>' + sups.map(c => `<option value="${esc(c)}"${c === S.sup ? ' selected' : ''}>${esc(c)}</option>`).join('');
+}
+
+function renderKpis(list) {
+  const n = list.length;
+  const spend = list.reduce((a, r) => a + r.spend, 0);
+  const lead = n ? list.reduce((a, r) => a + r.lead, 0) / n : 0;
+  const ontime = list.filter(r => r.ok).length;
+  const otd = n ? ontime / n * 100 : 0;
+  const leads = list.map(r => r.lead);
+  $('k-spend').textContent = usd(spend);
+  $('k-spend-note').textContent = `${n} purchase orders, ${usd(n ? spend / n : 0)} average`;
+  $('k-lead').innerHTML = `${lead.toFixed(1)}<small>days</small>`;
+  $('k-lead-note').textContent = n ? `Range ${Math.min(...leads)} to ${Math.max(...leads)} days` : '';
+  $('k-otd').textContent = pct(otd);
+  $('k-otd-note').textContent = `${ontime} of ${n} orders on time`;
+  $('k-otd-bar').style.width = otd + '%';
+}
+
+function renderBars(id, items, key, selected, noun) {
+  items.sort((a, b) => b.spend - a.spend);
+  const total = items.reduce((a, g) => a + g.spend, 0);
+  const max = items.length ? items[0].spend : 1;
+  const el = $(id);
+  el.classList.toggle('has-sel', !!selected);
+  el.innerHTML = items.map(g => {
+    const sel = g.name === selected;
+    const share = total ? g.spend / total * 100 : 0;
+    const tip = `${g.name}\n${usd(g.spend)}, ${pct(share)} of ${noun} spend\n${g.orders} orders, ${g.late} late`;
+    return `<button type="button" class="bar${sel ? ' sel' : ''}" data-${key}="${esc(g.name)}" data-fid="bar-${key}-${esc(g.name)}" data-tip="${esc(tip)}" aria-pressed="${sel}" aria-label="${esc(g.name)}, ${usd(g.spend)}. Click to filter.">` +
+      `<span class="bar-top"><span class="bar-name">${esc(g.name)}</span><span class="bar-val">${usdK(g.spend)}</span></span>` +
+      `<span class="bar-track"><span class="bar-fill" style="width:${(g.spend / max * 100).toFixed(2)}%"></span></span></button>`;
+  }).join('');
+}
+
+function renderTable(list) {
+  const items = group(list, 'sup').map(g => ({ ...g, rate: g.orders ? g.late / g.orders * 100 : 0 }));
+  const cmp = {
+    spend: (a, b) => b.spend - a.spend,
+    rate: (a, b) => b.rate - a.rate || b.spend - a.spend,
+    lateSpend: (a, b) => b.lateSpend - a.lateSpend || b.spend - a.spend
+  }[S.sort];
+  items.sort(cmp);
+  const max = Math.max(...items.map(g => g.spend), 1);
+  const total = items.reduce((a, g) => a + g.spend, 0);
+  $('tbody').innerHTML = items.map((g, i) => {
+    const t = tier(g.rate);
+    const sel = g.name === S.sup;
+    return `<tr class="${sel ? 'sel' : ''}${i === 0 ? ' top' : ''}">` +
+      `<td><span class="rank">${i + 1}</span></td>` +
+      `<td><button type="button" class="link" data-sup="${esc(g.name)}" data-fid="tbl-${esc(g.name)}">${esc(g.name)}</button><span class="tcat">${esc([...g.cats].join(', '))}</span></td>` +
+      `<td class="num"><span class="spend"><span>${usd(g.spend)}</span><span class="mini"><i style="width:${(g.spend / max * 70).toFixed(1)}px"></i><b>${pct(total ? g.spend / total * 100 : 0)}</b></span></span></td>` +
+      `<td class="num">${g.orders}</td>` +
+      `<td class="num rate">${pct(g.rate)}<small>${g.late} of ${g.orders}</small></td>` +
+      `<td class="num">${g.lateSpend ? usd(g.lateSpend) : '$0'}</td>` +
+      `<td class="num">${(g.lead / g.orders).toFixed(1)} days</td>` +
+      `<td><span class="pill ${t}">${tierLabel[t]}</span></td></tr>`;
+  }).join('');
+  const label = { spend: 'spend', rate: 'late-delivery rate', lateSpend: 'late spend' }[S.sort];
+  $('cap-tbl').textContent = `Ranked by ${label}${S.cat ? ', ' + S.cat + ' only' : ', all categories'}. Click a supplier to filter the page.`;
+  document.querySelectorAll('[data-sort]').forEach(b => b.setAttribute('aria-pressed', b.dataset.sort === S.sort));
+}
+
+function render() {
+  const fid = document.activeElement && document.activeElement.dataset ? document.activeElement.dataset.fid : null;
+  const both = rows.filter(r => (!S.cat || r.cat === S.cat) && (!S.sup || r.sup === S.sup));
+  const catOnly = rows.filter(r => !S.cat || r.cat === S.cat);
+  const supOnly = rows.filter(r => !S.sup || r.sup === S.sup);
+  renderSelects(catOnly, supOnly);
+  renderKpis(both);
+  renderBars('sup-bars', group(catOnly, 'sup'), 'sup', S.sup, S.cat || 'portfolio');
+  renderBars('cat-bars', group(supOnly, 'cat'), 'cat', S.cat, S.sup || 'portfolio');
+  renderTable(catOnly);
+  $('cap-sup').textContent = (S.cat ? S.cat + ' only. ' : 'All categories. ') + 'Click a bar to filter.';
+  $('cap-cat').textContent = (S.sup ? S.sup + ' only. ' : 'All suppliers. ') + 'Click a bar to filter.';
+  $('count').textContent = `Showing ${both.length} of ${rows.length} orders`;
+  if (fid) { const n = [...document.querySelectorAll('[data-fid]')].find(e => e.dataset.fid === fid); if (n) n.focus(); }
+}
+
+// Events
+$('f-cat').addEventListener('change', e => { S.cat = e.target.value; if (S.sup && !rows.some(r => r.sup === S.sup && (!S.cat || r.cat === S.cat))) S.sup = ''; render(); });
+$('f-sup').addEventListener('change', e => { S.sup = e.target.value; if (S.cat && !rows.some(r => r.cat === S.cat && (!S.sup || r.sup === S.sup))) S.cat = ''; render(); });
+$('reset').addEventListener('click', () => { S.cat = ''; S.sup = ''; render(); });
+document.addEventListener('click', e => {
+  const t = e.target.closest ? e.target.closest('[data-sup],[data-cat],[data-sort]') : null;
+  if (!t) return;
+  $('tip').hidden = true;
+  if (t.dataset.sort) { S.sort = t.dataset.sort; }
+  else if (t.dataset.sup !== undefined) { S.sup = S.sup === t.dataset.sup ? '' : t.dataset.sup; }
+  else if (t.dataset.cat !== undefined) { S.cat = S.cat === t.dataset.cat ? '' : t.dataset.cat; }
+  render();
+});
+
+// Tooltip
+const tip = $('tip');
+function placeTip(x, y) {
+  const w = tip.offsetWidth, h = tip.offsetHeight;
+  let l = x + 14, t = y + 16;
+  if (l + w > innerWidth - 8) l = x - w - 14;
+  if (t + h > innerHeight - 8) t = y - h - 14;
+  tip.style.left = Math.max(8, l) + 'px';
+  tip.style.top = Math.max(8, t) + 'px';
+}
+function showTip(el, x, y) { tip.textContent = el.dataset.tip; tip.hidden = false; placeTip(x, y); }
+document.addEventListener('pointermove', e => {
+  const el = e.target.closest ? e.target.closest('[data-tip]') : null;
+  if (el) showTip(el, e.clientX, e.clientY); else tip.hidden = true;
+});
+document.addEventListener('focusin', e => {
+  const el = e.target.closest ? e.target.closest('[data-tip]') : null;
+  if (el) { const b = el.getBoundingClientRect(); showTip(el, b.left + b.width / 2, b.top - 6); }
+});
+document.addEventListener('focusout', () => { tip.hidden = true; });
+
+// Header text from the data
+const dates = rows.map(r => r.date).sort();
+$('range').textContent = `Procurement, ${fmtDate(dates[0])} to ${fmtDate(dates[dates.length - 1])}, 2026`;
+$('scope').textContent = `${rows.length} purchase orders across ${new Set(rows.map(r => r.sup)).size} suppliers and ${new Set(rows.map(r => r.cat)).size} categories`;
+render();
+</script>
+
+</body></html>
